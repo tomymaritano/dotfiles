@@ -1,5 +1,8 @@
 # dotfiles
 
+![Uploading CleanShot 2026-06-30 at 19.39.18@2x.png…]()
+
+
 My macOS (Apple Silicon) terminal setup: **Ghostty + fish + Neovim (LazyVim)**, all themed with **Catppuccin Mocha**, plus modern CLI tools, code-quality tooling (SonarLint + SonarQube), and AI assistants (Claude Code, Grok, CodeRabbit).
 
 ## Stack
