@@ -103,12 +103,27 @@ docker run -d --name sonarqube \
 
 - Container control: `sq-up` / `sq-down` / `sq-logs`.
 
-## AI assistants (not versioned here)
+## AI assistants
 
 Installed as global CLIs (their auth is local and **not** in this repo):
 - **Claude Code** — `claude`
-- **Grok** (xAI) — `grok`
+- **Grok** (xAI, native CLI) — `grok`
 - **CodeRabbit** — `coderabbit` / `cr`
+
+### Claude Code running on Grok (`ccr/config.json`)
+
+The Claude Code *engine* can run on xAI Grok via [claude-code-router](https://github.com/musistudio/claude-code-router) (CCR), a local proxy that translates Anthropic ⇄ OpenAI format. Run it with the `grokcode` alias:
+
+```fish
+grokcode   # = env CLAUDE_CONFIG_DIR=~/.claude-grok ANTHROPIC_CUSTOM_MODEL_OPTION=grok-4.3 ccr code
+```
+
+- **Isolated profile** (`~/.claude-grok`) so it never touches your personal `claude` account.
+- `ANTHROPIC_CUSTOM_MODEL_OPTION=grok-4.3` makes Grok selectable in the `/model` picker (Claude Code rejects non-Claude names otherwise).
+- Needs `XAI_API_KEY` set: `set -Ux XAI_API_KEY xai-...` (stored in gitignored `fish_variables`).
+- `ccr/config.json` (in this repo) defines the providers/router; it has **no key** (uses `$XAI_API_KEY`). Copy it to `~/.claude-code-router/config.json`.
+- The model lives at `~/.claude-code-router/config.json` `Router` block; `ccr ui` opens a web editor.
+- Note: unofficial/unsupported by Anthropic; tool-use/agentic editing on Grok can be less reliable than native Claude.
 
 ## Notes
 

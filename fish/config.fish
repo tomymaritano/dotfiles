@@ -74,4 +74,9 @@ if status is-interactive
     alias sq-up   "docker start sonarqube"
     alias sq-down "docker stop sonarqube"
     alias sq-logs "docker logs -f sonarqube"
+
+    # Claude Code engine running on xAI Grok, via claude-code-router (CCR).
+    # Isolated profile (~/.claude-grok) so it never touches your personal `claude`,
+    # and grok-4.3 shows up selectable in the /model picker. Needs XAI_API_KEY set.
+    alias grokcode "env CLAUDE_CONFIG_DIR=$HOME/.claude-grok ANTHROPIC_CUSTOM_MODEL_OPTION=grok-4.3 ccr code"
 end
