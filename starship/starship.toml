@@ -1,0 +1,136 @@
+# ~/.config/starship.toml
+# Prompt with the Catppuccin Mocha palette (matches Ghostty + nvim)
+
+# Use the palette defined below
+palette = "catppuccin_mocha"
+
+# --- Prompt format ---
+format = """
+[](surface0)\
+$os\
+$username\
+[](bg:surface1 fg:surface0)\
+$directory\
+[](fg:surface1 bg:surface2)\
+$git_branch\
+$git_status\
+[](fg:surface2 bg:overlay0)\
+$nodejs\
+$python\
+$rust\
+$golang\
+[](fg:overlay0 bg:none)\
+$fill\
+$cmd_duration\
+$line_break\
+$character"""
+
+right_format = """$time"""
+
+[fill]
+symbol = " "
+
+# --- Directory ---
+[directory]
+style = "fg:text bg:surface1"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+# --- Git ---
+[git_branch]
+symbol = ""
+style = "fg:base bg:surface2"
+format = "[ $symbol $branch ]($style)"
+
+[git_status]
+style = "fg:base bg:surface2"
+format = "[$all_status$ahead_behind ]($style)"
+
+# --- Languages ---
+[nodejs]
+symbol = ""
+style = "fg:base bg:overlay0"
+format = "[ $symbol ($version) ]($style)"
+
+[python]
+symbol = ""
+style = "fg:base bg:overlay0"
+format = "[ $symbol ($version) ]($style)"
+
+[rust]
+symbol = ""
+style = "fg:base bg:overlay0"
+format = "[ $symbol ($version) ]($style)"
+
+[golang]
+symbol = ""
+style = "fg:base bg:overlay0"
+format = "[ $symbol ($version) ]($style)"
+
+# --- OS / user ---
+[os]
+disabled = true
+
+[username]
+show_always = false
+style_user = "fg:text bg:surface0"
+style_root = "fg:red bg:surface0"
+format = "[ $user ]($style)"
+
+# --- Duration of long-running commands ---
+[cmd_duration]
+min_time = 2000
+style = "fg:peach"
+format = "[  $duration ]($style)"
+
+# --- Clock on the right ---
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:overlay1"
+format = "[ $time ]($style)"
+
+# --- Prompt character ---
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold yellow)"
+
+# ---------------------------------------------------------------------------
+# Catppuccin Mocha palette
+# ---------------------------------------------------------------------------
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo  = "#f2cdcd"
+pink      = "#f5c2e7"
+mauve     = "#cba6f7"
+red       = "#f38ba8"
+maroon    = "#eba0ac"
+peach     = "#fab387"
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+teal      = "#94e2d5"
+sky       = "#89dceb"
+sapphire  = "#74c7ec"
+blue      = "#89b4fa"
+lavender  = "#b4befe"
+text      = "#cdd6f4"
+subtext1  = "#bac2de"
+subtext0  = "#a6adc8"
+overlay2  = "#9399b2"
+overlay1  = "#7f849c"
+overlay0  = "#6c7086"
+surface2  = "#585b70"
+surface1  = "#45475a"
+surface0  = "#313244"
+base      = "#1e1e2e"
+mantle    = "#181825"
+crust     = "#11111b"

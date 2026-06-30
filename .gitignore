@@ -1,0 +1,11 @@
+# nvim — generated state, not config
+nvim/lazy-lock.json
+nvim/lazyvim.json
+
+# macOS
+.DS_Store
+
+# never commit secrets / auth
+**/auth.json
+**/.env
+fish_variables
