@@ -1,6 +1,6 @@
 # dotfiles
 
-![Uploading CleanShot 2026-06-30 at 19.39.18@2x.png…]()
+<img width="4688" height="2976" alt="CleanShot 2026-06-30 at 19 39 18@2x" src="https://github.com/user-attachments/assets/9c2cc07c-cc4f-449a-9129-689ddf4d9a73" />
 
 
 My macOS (Apple Silicon) terminal setup: **Ghostty + fish + Neovim (LazyVim)**, all themed with **Catppuccin Mocha**, plus modern CLI tools, code-quality tooling (SonarLint + SonarQube), and AI assistants (Claude Code, Grok, CodeRabbit).
