@@ -12,8 +12,8 @@ theme = Catppuccin Mocha
 
 # Appearance
 # Translucent background + macOS blur behind the window
-background-opacity = 0.85
-background-blur-radius = 20
+background-opacity = 0.75
+background-blur-radius = 60
 window-padding-x = 8
 window-padding-y = 8
 cursor-style = block

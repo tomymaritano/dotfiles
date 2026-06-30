@@ -5,6 +5,10 @@ if test -x /opt/homebrew/bin/brew
     /opt/homebrew/bin/brew shellenv | source
 end
 
+# --- User binaries (CLIs: claude, coderabbit/cr, grok, etc.) ---
+fish_add_path "$HOME/.local/bin"
+fish_add_path "$HOME/.grok/bin"
+
 # --- Default editor ---
 set -gx EDITOR nvim
 set -gx VISUAL nvim
