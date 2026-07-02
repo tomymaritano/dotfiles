@@ -1,6 +1,7 @@
 # dotfiles
 
-<img width="4688" height="2976" alt="CleanShot 2026-06-30 at 19 39 18@2x" src="https://github.com/user-attachments/assets/9c2cc07c-cc4f-449a-9129-689ddf4d9a73" />
+<img width="3392" height="2086" alt="CleanShot 2026-07-02 at 00 46 30@2x" src="https://github.com/user-attachments/assets/46085335-6a0d-4361-86bc-372fdf97f6cd" />
+
 
 ![platform](https://img.shields.io/badge/platform-macOS%20Apple%20Silicon-000000?logo=apple&logoColor=white)
 ![shell](https://img.shields.io/badge/shell-fish%204.x-4E9A06?logo=gnubash&logoColor=white)
