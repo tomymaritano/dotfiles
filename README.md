@@ -5,6 +5,7 @@
 <img width="4688" height="2976" alt="image" src="https://github.com/user-attachments/assets/7dca5eed-33b1-455f-aff4-7452e725d813" />
 
 
+[![lint](https://github.com/tomymaritano/dotfiles/actions/workflows/lint.yml/badge.svg)](https://github.com/tomymaritano/dotfiles/actions/workflows/lint.yml)
 ![platform](https://img.shields.io/badge/platform-macOS%20Apple%20Silicon-000000?logo=apple&logoColor=white)
 ![shell](https://img.shields.io/badge/shell-fish%204.x-4E9A06?logo=gnubash&logoColor=white)
 ![terminal](https://img.shields.io/badge/terminal-Ghostty-1E1E2E)
@@ -108,6 +109,18 @@ it's safe to re-run and easy to undo (see [Uninstall](#uninstall)).
 Optional: `./macos/defaults.sh` applies opinionated macOS system settings (fast
 key repeat, Finder tweaks, screenshots → `~/Screenshots`). From then on, `just`
 runs the common tasks (see [Tasks](#tasks)).
+
+### First-run checklist (one-time, can't be scripted)
+
+These are account logins / GUI toggles the bootstrap can't do for you:
+
+- [ ] **1Password** — sign in, then *Settings → Developer → Use the SSH agent*.
+- [ ] **Secrets** — `cp op/secrets.env.example op/secrets.env` and point the `op://` paths at your items.
+- [ ] **GitHub SSH key** — add your 1Password key to GitHub as **Authentication + Signing**, then enable signing in `~/.gitconfig.local` (see [git](#git-git--ssh--editorconfig)).
+- [ ] **`gh auth login`** and **`claude`** login (their auth is local, not in the repo).
+- [ ] **Claude Code extras** — `./claude/install-templates.sh` and `gh extension install dlvhdr/gh-dash`.
+- [ ] **Neovim** — open `nvim` once so LazyVim + Mason install plugins and language servers.
+- [ ] Open a **fresh terminal** so abbreviations, mise, atuin and the `claude` wrapper load.
 
 ## Themes
 
