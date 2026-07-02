@@ -116,7 +116,7 @@ These are account logins / GUI toggles the bootstrap can't do for you:
 
 - [ ] **1Password** — sign in, then *Settings → Developer → Use the SSH agent*.
 - [ ] **Secrets** — `cp op/secrets.env.example op/secrets.env` and point the `op://` paths at your items.
-- [ ] **GitHub SSH key** — add your 1Password key to GitHub as **Authentication + Signing**, then enable signing in `~/.gitconfig.local` (see [git](#git-git--ssh--editorconfig)).
+- [ ] **GitHub signing key** — add your 1Password SSH key to GitHub as a **Signing** key, then enable signing in `~/.gitconfig.local` (see [git](#git-git--ssh--editorconfig)).
 - [ ] **`gh auth login`** and **`claude`** login (their auth is local, not in the repo).
 - [ ] **Claude Code extras** — `./claude/install-templates.sh` and `gh extension install dlvhdr/gh-dash`.
 - [ ] **Neovim** — open `nvim` once so LazyVim + Mason install plugins and language servers.
@@ -268,13 +268,16 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 - `git/config` → `~/.gitconfig`: identity, sane defaults (`pull.rebase`, `push.autoSetupRemote`, `fetch.prune`), **delta** as the diff pager, aliases (`git s`, `git lg`, `git undo`, `git pushf`, …), and SSH signing wired to 1Password's `op-ssh-sign`.
 - Machine-specific or secret bits (signing key, coderabbit id) live in `~/.gitconfig.local`, pulled in via `[include]` — **not tracked**.
 - `ssh/config` → `~/.ssh/config`: routes auth through the **1Password SSH agent** (keys stay in 1Password, Touch ID to use); the on-disk key remains a fallback.
-- **Turn on signed commits** (one-time): enable *1Password → Settings → Developer → SSH agent*, add your public key to GitHub as **both** an Authentication and a Signing key, then add to `~/.gitconfig.local`:
+- **Turn on signed commits** (one-time): create an SSH key in 1Password (`op item create --category ssh-key`), add its public key to GitHub as a **Signing** key (Settings → SSH and GPG keys; *Authentication* type too only if you also want 1Password to handle `git push`), then set in `~/.gitconfig.local`:
   ```ini
   [user]
       signingkey = ssh-ed25519 AAAA…your key…
   [commit]
       gpgsign = true
+  [gpg "ssh"]
+      allowedSignersFile = ~/.config/git/allowed_signers
   ```
+  and add `<your-email> ssh-ed25519 AAAA…` to `~/.config/git/allowed_signers` so `git log --show-signature` verifies locally.
 - `git/ignore` → `~/.gitignore_global`; `editorconfig` → `~/.editorconfig`.
 
 ### Neovim (`nvim/`)
