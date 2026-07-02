@@ -26,6 +26,11 @@ end
 
 # --- bat as the default pager ---
 set -gx PAGER bat
+# bat follows the terminal palette (which the `theme` command switches via Ghostty)
+set -gx BAT_THEME ansi
+# fzf colors — the `theme` command sets these (universal); default to kanagawa
+set -q FZF_DEFAULT_OPTS
+or set -gx FZF_DEFAULT_OPTS "--color=fg:#dcd7ba,bg:#1f1f28,hl:#7e9cd8,fg+:#dcd7ba,bg+:#2a2a37,hl+:#7fb4ca,border:#54546d,prompt:#e6c384,pointer:#d27e99,info:#727169,header:#98bb6c"
 
 # --- Empty greeting when fish opens ---
 set -g fish_greeting
@@ -82,30 +87,29 @@ if status is-interactive
         alias cat bat
     end
 
-    # git / utils
-    alias lg  lazygit
-    alias gs  "git status"
-    alias gd  "git diff"
-
-    # gh: PR/issue dashboard (gh-dash extension) + quick PR
-    alias ghd  "gh dash"
-    alias ghpr "gh pr create --web"
+    # git / gh shortcuts as abbreviations — they expand inline as you type, so
+    # you see (and can edit) the real command before running it.
+    abbr -a lg   lazygit
+    abbr -a gs   'git status'
+    abbr -a gd   'git diff'
+    abbr -a ghd  'gh dash'
+    abbr -a ghpr 'gh pr create --web'
 
     # tweets: `tweet "idea"` jots to ~/notes/tweets.md; `tweet` alone opens it.
     # Draft/post with Claude Code's /tweet command (see claude/commands/tweet.md).
-    # `cx` = Claude Code with X secrets injected from 1Password (for posting).
-    alias cx "op run --account my.1password.com --env-file=$HOME/dotfiles/op/secrets.env -- claude"
+    # `claude` itself is wrapped (functions/claude.fish) to inject secrets from
+    # 1Password via `op run`, so X/SonarQube/xAI keys never live on disk.
 
     # theme switcher (Ghostty + starship + nvim) — see functions/theme.fish
     complete -c theme -f -a "mocha tokyonight kanagawa rose-pine"
 
     # SonarQube (Docker) - dashboard at http://localhost:9000
-    alias sq-up   "docker start sonarqube"
-    alias sq-down "docker stop sonarqube"
-    alias sq-logs "docker logs -f sonarqube"
+    abbr -a sq-up   'docker start sonarqube'
+    abbr -a sq-down 'docker stop sonarqube'
+    abbr -a sq-logs 'docker logs -f sonarqube'
 
     # Claude Code engine running on xAI Grok, via claude-code-router (CCR).
     # Isolated profile (~/.claude-grok) so it never touches your personal `claude`,
     # and grok-4.3 shows up selectable in the /model picker. Needs XAI_API_KEY set.
-    alias grokcode "env CLAUDE_CONFIG_DIR=$HOME/.claude-grok ANTHROPIC_CUSTOM_MODEL_OPTION=grok-4.3 ccr code"
+    alias grokcode "op run --account my.1password.com --env-file=$HOME/dotfiles/op/secrets.env -- env CLAUDE_CONFIG_DIR=$HOME/.claude-grok ANTHROPIC_CUSTOM_MODEL_OPTION=grok-4.3 ccr code"
 end
