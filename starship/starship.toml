@@ -2,7 +2,7 @@
 # Prompt with the Catppuccin Mocha palette (matches Ghostty + nvim)
 
 # Use the palette defined below
-palette = "catppuccin_mocha"
+palette = "kanagawa"
 
 # --- Prompt format ---
 format = """
