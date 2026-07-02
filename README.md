@@ -1,6 +1,6 @@
 # dotfiles
 
-<img width="3392" height="2086" alt="CleanShot 2026-07-02 at 00 46 30@2x" src="https://github.com/user-attachments/assets/46085335-6a0d-4361-86bc-372fdf97f6cd" />
+<img width="4688" height="2976" alt="image" src="https://github.com/user-attachments/assets/9b953794-44a2-43e7-a6ca-7309cf7ef65e" />
 
 
 ![platform](https://img.shields.io/badge/platform-macOS%20Apple%20Silicon-000000?logo=apple&logoColor=white)
