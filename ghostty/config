@@ -8,7 +8,7 @@ font-family = JetBrainsMono Nerd Font
 font-size = 14
 
 # Theme
-theme = Kanagawa Wave
+theme = Catppuccin Mocha
 
 # Appearance
 # Translucent background + macOS blur behind the window
