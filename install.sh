@@ -49,12 +49,25 @@ link "$DOT/nvim/lua"          "$CFG/nvim/lua"
 [ -f "$DOT/nvim/lazy-lock.json" ] && link "$DOT/nvim/lazy-lock.json"  "$CFG/nvim/lazy-lock.json"
 [ -f "$DOT/nvim/lazyvim.json" ]   && link "$DOT/nvim/lazyvim.json"    "$CFG/nvim/lazyvim.json"
 
-# nvim theme state (runtime, not tracked): default to mocha if absent.
+# nvim theme state (runtime, not tracked): default to kanagawa if absent.
 # The `theme` command rewrites this; nvim reads it at startup.
 [ -f "$CFG/nvim/theme.txt" ] || echo "kanagawa" > "$CFG/nvim/theme.txt"
+
+# mise: global runtime versions (node/python/…), tracked for reproducibility.
+mkdir -p "$CFG/mise"
+[ -f "$DOT/mise/config.toml" ] && link "$DOT/mise/config.toml" "$CFG/mise/config.toml"
+
+# Claude Code: link our custom slash commands + the tweet voice guide.
+# ~/.claude is otherwise managed by Claude Code, so link files individually.
+mkdir -p "$HOME/.claude/commands"
+for cmd in "$DOT"/claude/commands/*.md; do
+  [ -e "$cmd" ] && link "$cmd" "$HOME/.claude/commands/$(basename "$cmd")"
+done
+[ -f "$DOT/claude/voice.md" ] && link "$DOT/claude/voice.md" "$HOME/.claude/voice.md"
 
 echo
 echo "Done. Next:"
 echo "  1) brew bundle --file=$DOT/Brewfile"
 echo "  2) fisher install jorgebucaran/fisher  (then: fisher update)"
 echo "  3) open nvim so LazyVim/Mason install plugins + sonarlint-language-server"
+echo "  4) gh extension install dlvhdr/gh-dash   (PR/issue dashboard: 'ghd')"

@@ -19,11 +19,10 @@ if test -d /opt/homebrew/opt/openjdk@21
     fish_add_path /opt/homebrew/opt/openjdk@21/bin
 end
 
-# --- Node / nvm.fish ---
-# nvm.fish (plugin installed via fisher) manages node versions natively in fish.
-# It auto-loads $nvm_default_version on shell startup (see conf.d/nvm.fish).
-# Commands: `nvm install 22`, `nvm use 20`, `nvm list`.
-# Change the default with: set --universal nvm_default_version <ver>
+# --- Runtimes / mise ---
+# mise manages node/python/go/… versions (replaces nvm). Global versions live in
+# mise/config.toml (tracked). Per project: `mise use node@22`, `mise use python@3.12`.
+# It's activated in the interactive block below.
 
 # --- bat as the default pager ---
 set -gx PAGER bat
@@ -61,6 +60,11 @@ if status is-interactive
         direnv hook fish | source
     end
 
+    # mise: node/python/go/… version manager (replaces nvm)
+    if type -q mise
+        mise activate fish | source
+    end
+
     # --- Aliases ---
     alias v   nvim
 
@@ -82,6 +86,13 @@ if status is-interactive
     alias lg  lazygit
     alias gs  "git status"
     alias gd  "git diff"
+
+    # gh: PR/issue dashboard (gh-dash extension) + quick PR
+    alias ghd  "gh dash"
+    alias ghpr "gh pr create --web"
+
+    # tweets: `tweet "idea"` jots to ~/notes/tweets.md; `tweet` alone opens it.
+    # Draft/post with Claude Code's /tweet command (see claude/commands/tweet.md).
 
     # theme switcher (Ghostty + starship + nvim) — see functions/theme.fish
     complete -c theme -f -a "mocha tokyonight kanagawa rose-pine"

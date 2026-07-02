@@ -25,8 +25,9 @@ brew "sonar-scanner"                    # local analysis against SonarQube
 # The SonarQube server runs in Docker, see README
 
 # --- Dev tooling ---
-brew "gh"                               # GitHub CLI
+brew "gh"                               # GitHub CLI (gh-dash extension: `ghd`)
 brew "git"
+brew "mise"                             # runtime version manager (node/python/…)
 brew "just"                             # command runner (see justfile)
 brew "shellcheck"                       # shell linter (CI + `just lint`)
 brew "stylua"                           # Lua formatter (nvim config)
