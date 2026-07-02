@@ -38,7 +38,7 @@ link "$DOT/nvim/lua"          "$CFG/nvim/lua"
 
 # nvim theme state (runtime, not tracked): default to mocha if absent.
 # The `theme` command rewrites this; nvim reads it at startup.
-[ -f "$CFG/nvim/theme.txt" ] || echo "mocha" > "$CFG/nvim/theme.txt"
+[ -f "$CFG/nvim/theme.txt" ] || echo "kanagawa" > "$CFG/nvim/theme.txt"
 
 echo
 echo "Done. Next:"

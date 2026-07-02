@@ -2,8 +2,27 @@
 
 <img width="4688" height="2976" alt="CleanShot 2026-06-30 at 19 39 18@2x" src="https://github.com/user-attachments/assets/9c2cc07c-cc4f-449a-9129-689ddf4d9a73" />
 
+![platform](https://img.shields.io/badge/platform-macOS%20Apple%20Silicon-000000?logo=apple&logoColor=white)
+![shell](https://img.shields.io/badge/shell-fish%204.x-4E9A06?logo=gnubash&logoColor=white)
+![terminal](https://img.shields.io/badge/terminal-Ghostty-1E1E2E)
+![editor](https://img.shields.io/badge/editor-Neovim%20·%20LazyVim-57A143?logo=neovim&logoColor=white)
+![themes](https://img.shields.io/badge/themes-4%20·%20one--command%20switcher-e6c384)
 
-My macOS (Apple Silicon) terminal setup: **Ghostty + fish + Neovim (LazyVim)**, themed with a **one-command switcher** — `theme <name>` restyles the terminal, prompt and editor together (**Catppuccin Mocha** by default; also TokyoNight, Kanagawa, Rose Pine). Plus modern CLI tools, code-quality tooling (SonarLint + SonarQube), and AI assistants (Claude Code, Grok, CodeRabbit).
+My macOS (Apple Silicon) terminal setup: **Ghostty + fish + Neovim (LazyVim)**, themed with a **one-command switcher** — `theme <name>` restyles the terminal, prompt and editor together (**Kanagawa Wave** by default; also Catppuccin Mocha, TokyoNight, Rose Pine). Plus modern CLI tools, code-quality tooling (SonarLint + SonarQube), and AI assistants (Claude Code, Grok, CodeRabbit).
+
+## Contents
+
+- [Stack](#stack)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Themes](#themes)
+- [Keybindings](#keybindings)
+- [Per-tool notes](#per-tool-notes)
+- [Code quality](#code-quality)
+- [AI assistants](#ai-assistants)
+- [Updating](#updating)
+- [Uninstall](#uninstall)
+- [Notes](#notes)
 
 ## Stack
 
@@ -13,7 +32,7 @@ Ghostty (terminal)  →  fish (shell)  →  Neovim / LazyVim (editor)
    JetBrains Nerd Font  zoxide · eza · bat  ripgrep · fd
    blur + transparency  fzf · nvm.fish      Mason
 
-   theme mocha | tokyonight | kanagawa | rose-pine   ← restyles all three
+   theme kanagawa | mocha | tokyonight | rose-pine   ← restyles all three
 ```
 
 | Layer | Tool | What for |
@@ -28,7 +47,15 @@ Ghostty (terminal)  →  fish (shell)  →  Neovim / LazyVim (editor)
 | search | [ripgrep](https://github.com/BurntSushi/ripgrep) + [fd](https://github.com/sharkdp/fd) | fast; used by Telescope in nvim |
 | node | [nvm.fish](https://github.com/jorgebucaran/nvm.fish) | native node version management in fish |
 | git | [lazygit](https://github.com/jesseduffield/lazygit) | git TUI (`lg`) |
-| quality | SonarLint (nvim) + SonarQube (Docker) | see below |
+| quality | SonarLint (nvim) + SonarQube (Docker) | see [Code quality](#code-quality) |
+
+## Requirements
+
+- **macOS on Apple Silicon** (Homebrew lives under `/opt/homebrew`).
+- **[Homebrew](https://brew.sh)** — everything else is installed from the `Brewfile`.
+- **git** and, for the SSH clone below, a GitHub SSH key (or clone over HTTPS).
+- A **Nerd Font** — the `Brewfile` installs *JetBrainsMono Nerd Font*; Ghostty is
+  already configured to use it. Other terminals need the font selected manually.
 
 ## Installation
 
@@ -53,43 +80,117 @@ fish -c 'nvm install 24; and set --universal nvm_default_version 24'
 nvim
 ```
 
+`install.sh` symlinks each config into `~/.config` and **backs up** anything that
+was already there to `*.bak.<timestamp>` — so it's safe to re-run and easy to undo
+(see [Uninstall](#uninstall)).
+
 ## Themes
 
 One command restyles the whole stack — terminal, prompt and editor — at once:
 
 ```fish
-theme mocha        # Catppuccin Mocha  (default)
+theme kanagawa     # Kanagawa Wave     (default)
+theme mocha        # Catppuccin Mocha
 theme tokyonight   # TokyoNight Moon
-theme kanagawa     # Kanagawa Wave
 theme rose-pine    # Rose Pine Moon
 ```
+
+### Gallery
+
+The banner accent and starship prompt follow the active theme:
+
+|  |  |
+|:--:|:--:|
+| ![Kanagawa Wave](https://img.shields.io/badge/Kanagawa%20Wave-default%20·%20gold-e6c384?style=for-the-badge&labelColor=1f1f28) | ![Catppuccin Mocha](https://img.shields.io/badge/Catppuccin%20Mocha-mauve-cba6f7?style=for-the-badge&labelColor=1e1e2e) |
+| ![TokyoNight Moon](https://img.shields.io/badge/TokyoNight%20Moon-blue-82aaff?style=for-the-badge&labelColor=222436) | ![Rose Pine Moon](https://img.shields.io/badge/Rose%20Pine%20Moon-pink-eb6f92?style=for-the-badge&labelColor=232136) |
+
+> **Screenshots:** drop one per theme here the same way as the header image —
+> drag a PNG into a GitHub issue/comment to get a `user-attachments` URL, then
+> replace a cell with `![kanagawa](URL)`.
+
+### How switching maps
 
 `theme` (defined in `fish/functions/theme.fish`) maps a short name to the
 matching **Ghostty theme**, **starship palette** and **Neovim colorscheme**:
 
-| `theme <name>` | Ghostty | starship palette | Neovim colorscheme |
-|----------------|---------|------------------|--------------------|
-| `mocha`        | Catppuccin Mocha | `catppuccin_mocha` | `catppuccin-mocha`  |
-| `tokyonight`   | TokyoNight Moon  | `tokyonight`       | `tokyonight-moon`   |
-| `kanagawa`     | Kanagawa Wave    | `kanagawa`         | `kanagawa-wave`     |
-| `rose-pine`    | Rose Pine Moon   | `rose_pine`        | `rose-pine-moon`    |
+| `theme <name>` | Ghostty | starship palette | Neovim colorscheme | banner accent |
+|----------------|---------|------------------|--------------------|---------------|
+| `kanagawa`     | Kanagawa Wave    | `kanagawa`         | `kanagawa-wave`     | gold `#e6c384`  |
+| `mocha`        | Catppuccin Mocha | `catppuccin_mocha` | `catppuccin-mocha`  | mauve `#cba6f7` |
+| `tokyonight`   | TokyoNight Moon  | `tokyonight`       | `tokyonight-moon`   | blue `#82aaff`  |
+| `rose-pine`    | Rose Pine Moon   | `rose_pine`        | `rose-pine-moon`    | pink `#eb6f92`  |
 
-**How it applies after switching:**
+### How it applies after switching
+
 - **starship** — instant, on the next prompt.
 - **Ghostty** — reload with `Cmd+Shift+,` (or just open a new window).
 - **Neovim** — restart nvim. To *preview* themes live without committing, use
   LazyVim's picker: `<leader>uC` (that preview is not persisted; `theme` is what sticks).
 
-**How it works internally:**
+### How it works internally
+
 - Ghostty (`ghostty/config`) and starship (`starship.toml`) each have one line
   swapped in place (`theme = …` / `palette = "…"`).
 - Neovim reads a tiny state file, `~/.config/nvim/theme.txt` (git-ignored), at
-  startup — `nvim/lua/plugins/colorscheme.lua` maps its contents to a colorscheme
-  and installs all four theme plugins.
+  startup — `nvim/lua/plugins/colorscheme.lua` maps its contents to a colorscheme,
+  installs all four theme plugins, and colors the dashboard banner per theme.
 
 To **add a theme**: add a `case` in `fish/functions/theme.fish`, a matching
-`[palettes.<name>]` block in `starship.toml`, and an entry (plus its plugin) in
-`nvim/lua/plugins/colorscheme.lua`.
+`[palettes.<name>]` block in `starship.toml`, and an entry (plus its plugin +
+accent color) in `nvim/lua/plugins/colorscheme.lua` / `nvim/lua/plugins/dashboard.lua`.
+
+## Keybindings
+
+`<leader>` is **space**. These are LazyVim defaults plus this repo's additions —
+see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
+
+### Neovim — files & search
+
+| Key | Action |
+|-----|--------|
+| `<leader><space>` | Find files (project root) |
+| `<leader>ff` / `<leader>fr` | Find files / recent files |
+| `<leader>/` | Live grep (search in project) |
+| `<leader>,` | Switch buffer |
+| `<leader>e` / `<leader>E` | File explorer (root / cwd) |
+
+### Neovim — code & LSP
+
+| Key | Action |
+|-----|--------|
+| `gd` `gr` `gI` `gy` | Go to definition / references / implementation / type |
+| `K` | Hover docs |
+| `<leader>ca` / `<leader>cr` | Code action / rename |
+| `<leader>cf` | Format |
+| `]d` / `[d` | Next / previous diagnostic |
+| `<leader>cd` | Line diagnostics |
+
+### Neovim — git, windows, UI
+
+| Key | Action |
+|-----|--------|
+| `<leader>gg` | lazygit |
+| `<leader>gb` | Blame line · `]h` / `[h` next/prev hunk |
+| `<C-h/j/k/l>` | Move between windows |
+| `<leader>\|` / `<leader>-` | Split vertical / horizontal |
+| `<S-h>` / `<S-l>` | Previous / next buffer · `<leader>bd` close buffer |
+| `<leader>uC` | Colorscheme picker (live preview) |
+| `<leader>l` / `<leader>cm` | Lazy / Mason |
+
+### fish — aliases & functions
+
+| Command | What it does |
+|---------|--------------|
+| `v` | nvim |
+| `lg` | lazygit |
+| `ll` / `lt` | eza long / tree listing |
+| `cat` | bat (syntax highlighting) |
+| `gs` / `gd` | git status / git diff |
+| `z <dir>` | zoxide jump to a frequent directory |
+| `theme <name>` | [switch the whole-stack theme](#themes) |
+| `sq-up` / `sq-down` / `sq-logs` | [SonarQube](#code-quality) container control |
+| `grokcode` | Claude Code engine on Grok ([see below](#ai-assistants)) |
+| `nvm install/use/list` | node version management |
 
 ## Per-tool notes
 
@@ -104,19 +205,17 @@ To **add a theme**: add a `case` in `fish/functions/theme.fish`, a matching
 - Loads Homebrew, sets `EDITOR=nvim`, adds Java (openjdk@21) to PATH for SonarLint.
 - Initializes starship, zoxide and fzf in interactive sessions only.
 - node is managed by **nvm.fish** (`nvm install 22`, `nvm use 20`, `nvm list`).
-- Aliases: `v` (nvim), `lg` (lazygit), `ll`/`lt` (eza), `cat` (bat), `gs`/`gd`, `sq-up`/`sq-down`/`sq-logs` (SonarQube).
-- Functions (`fish/functions/`): `theme <name>` — the whole-stack theme switcher (see [Themes](#themes)).
+- Aliases & functions: see the [Keybindings cheatsheet](#keybindings).
 
 ### Neovim (`nvim/`)
 LazyVim base. The custom bits live in:
 - `lua/config/` → options, keymaps, autocmds.
-- `lua/plugins/` → extra plugins: `colorscheme.lua` (themes, see [Themes](#themes)) and `sonarlint.lua`.
+- `lua/plugins/` → extra plugins: `colorscheme.lua` (themes) + `dashboard.lua` (banner) — see [Themes](#themes) — and `sonarlint.lua`.
 
-Key bindings (`<leader>` = space): `<space><space>` find files · `<space>/` grep · `<space>e` explorer · `gd` definition · `<space>ca` code actions · `<space>gg` lazygit · `<space>uC` colorscheme picker (live preview).
+## Code quality
 
-## Code quality: SonarLint + SonarQube
-
-Two layers that act at different moments:
+Two layers that act at different moments: **SonarLint** (live, in nvim) and
+**SonarQube Server** (full analysis, in Docker).
 
 **1. SonarLint in nvim (`nvim/lua/plugins/sonarlint.lua`)** — *live* linting as you type, like VSCode's SonarLint. Runs locally, no server.
 - Requires `openjdk@21` (Java) and `sonarlint-language-server` (installed by Mason).
@@ -169,7 +268,35 @@ grokcode   # = env CLAUDE_CONFIG_DIR=~/.claude-grok ANTHROPIC_CUSTOM_MODEL_OPTIO
 - The model lives at `~/.claude-code-router/config.json` `Router` block; `ccr ui` opens a web editor.
 - Note: unofficial/unsupported by Anthropic; tool-use/agentic editing on Grok can be less reliable than native Claude.
 
+## Updating
+
+```bash
+cd ~/dotfiles && git pull
+./install.sh                     # re-link (safe; re-backs up anything non-symlinked)
+brew bundle --file=Brewfile      # pick up new tools
+fish -c 'fisher update'          # update fish plugins
+```
+
+Inside nvim: `:Lazy sync` to update plugins, `:Mason` to manage language servers.
+
+## Uninstall
+
+`install.sh` never deletes — it moves anything it replaces to `*.bak.<timestamp>`.
+To roll back, remove the symlinks and restore the most recent backups, e.g.:
+
+```bash
+cd ~/.config
+rm starship.toml ghostty/config fish/config.fish nvim/init.lua nvim/lua fish/functions/theme.fish
+# then restore the backups you want, for example:
+mv starship.toml.bak.* starship.toml
+```
+
+(The `theme.fish` symlink is the only file this repo adds to `fish/functions/`;
+fisher's own functions there are left untouched.)
+
 ## Notes
 
 - macOS Apple Silicon (Homebrew under `/opt/homebrew`).
 - No secrets in the repo: `auth.json`, `.env` and `fish_variables` are in `.gitignore`.
+- The active theme lives in tracked files (`ghostty/config`, `starship.toml`), so
+  running `theme <x>` shows up as a diff on those two files — that's expected.

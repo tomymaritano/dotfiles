@@ -16,7 +16,7 @@ local COLORSCHEMES = {
   ["rose-pine"] = "rose-pine-moon",
 }
 
-local DEFAULT = "catppuccin-mocha"
+local DEFAULT = "kanagawa-wave"
 
 local function active_colorscheme()
   local path = vim.fn.stdpath("config") .. "/theme.txt"
