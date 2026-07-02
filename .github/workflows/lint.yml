@@ -13,7 +13,7 @@ jobs:
       - name: shellcheck
         run: |
           sudo apt-get update && sudo apt-get install -y shellcheck
-          shellcheck install.sh macos/defaults.sh sonarqube/setup-mcp.sh
+          shellcheck install.sh macos/defaults.sh sonarqube/setup-mcp.sh x/setup-mcp.sh
 
       - name: stylua
         uses: JohnnyMorganz/stylua-action@v4

@@ -22,7 +22,7 @@ update:
 
 # lint shell scripts + Lua (same checks CI runs)
 lint:
-    shellcheck install.sh macos/defaults.sh sonarqube/setup-mcp.sh
+    shellcheck install.sh macos/defaults.sh sonarqube/setup-mcp.sh x/setup-mcp.sh
     stylua --check nvim/lua
 
 # auto-format Lua
@@ -37,3 +37,7 @@ macos:
 sonar:
     docker compose -f sonarqube/docker-compose.yml up -d
     ./sonarqube/setup-mcp.sh
+
+# register X's official MCP servers with Claude Code (docs + api)
+x:
+    ./x/setup-mcp.sh

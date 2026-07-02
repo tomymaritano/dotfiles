@@ -10,3 +10,4 @@ nvim/theme.txt
 **/auth.json
 **/.env
 fish_variables
+op/secrets.env

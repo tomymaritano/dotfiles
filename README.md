@@ -304,6 +304,16 @@ grokcode   # = env CLAUDE_CONFIG_DIR=~/.claude-grok ANTHROPIC_CUSTOM_MODEL_OPTIO
 - The model lives at `~/.claude-code-router/config.json` `Router` block; `ccr ui` opens a web editor.
 - Note: unofficial/unsupported by Anthropic; tool-use/agentic editing on Grok can be less reliable than native Claude.
 
+### Tweets (build in public)
+
+A workflow for drafting eng/product tweets without breaking flow:
+
+1. **Capture** — `tweet "raw idea"` appends it to `~/notes/tweets.md` (`tweet` with no args opens the file). Fast, no context switch.
+2. **Draft** — in Claude Code, `/tweet <idea>` writes tweet/thread options in a defined voice (`claude/voice.md`), pulling from the idea or your recent git activity. `/commit` writes commit messages. Both are tracked in `claude/commands/` and symlinked into `~/.claude/commands/`.
+3. **Post** — via X's **official MCP servers** (`x/setup-mcp.sh`):
+   - `x-docs` (`https://docs.x.com/mcp`) — search the X API docs; no auth, already on.
+   - `xapi` (`https://api.x.com/mcp` via the `xurl` OAuth2 bridge) — acts as your account. Create an X app with OAuth 2.0, register redirect `http://localhost:8080/callback`, set `X_CLIENT_ID`/`X_CLIENT_SECRET`, then run `x/setup-mcp.sh`. First use opens a browser to log in once (free tier ≈ 500 writes/month).
+
 ## Tasks
 
 Common jobs are wrapped in a [`justfile`](https://github.com/casey/just) — run
@@ -348,6 +358,7 @@ fisher's own functions there are left untouched.)
 ## Notes
 
 - macOS Apple Silicon (Homebrew under `/opt/homebrew`).
-- No secrets in the repo: `auth.json`, `.env` and `fish_variables` are in `.gitignore`.
+- No secrets in the repo: `auth.json`, `.env`, `fish_variables` and `op/secrets.env` are in `.gitignore`.
+- **Secrets via 1Password (optional):** instead of `set -Ux` universal vars, keep API keys in 1Password and inject them per-process — copy `op/secrets.env.example` to `op/secrets.env` (the `op://` paths are pointers, not secrets), then launch `op run --env-file=~/dotfiles/op/secrets.env -- claude`. The secret never touches disk.
 - The active theme lives in tracked files (`ghostty/config`, `starship.toml`), so
   running `theme <x>` shows up as a diff on those two files — that's expected.
