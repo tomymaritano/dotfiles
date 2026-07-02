@@ -310,9 +310,11 @@ A workflow for drafting eng/product tweets without breaking flow:
 
 1. **Capture** — `tweet "raw idea"` appends it to `~/notes/tweets.md` (`tweet` with no args opens the file). Fast, no context switch.
 2. **Draft** — in Claude Code, `/tweet <idea>` writes tweet/thread options in a defined voice (`claude/voice.md`), pulling from the idea or your recent git activity. `/commit` writes commit messages. Both are tracked in `claude/commands/` and symlinked into `~/.claude/commands/`.
-3. **Post** — via X's **official MCP servers** (`x/setup-mcp.sh`):
-   - `x-docs` (`https://docs.x.com/mcp`) — search the X API docs; no auth, already on.
-   - `xapi` (`https://api.x.com/mcp` via the `xurl` OAuth2 bridge) — acts as your account. Create an X app with OAuth 2.0, register redirect `http://localhost:8080/callback`, set `X_CLIENT_ID`/`X_CLIENT_SECRET`, then run `x/setup-mcp.sh`. First use opens a browser to log in once (free tier ≈ 500 writes/month).
+3. **Post** — via MCP (`x/setup-mcp.sh`):
+   - `x-docs` (`https://docs.x.com/mcp`) — official X API docs search; no auth.
+   - `x-twitter` — community poster ([Infatoshi/x-mcp](https://github.com/Infatoshi/x-mcp)) with `post_tweet`, `reply_to_tweet`, `quote_tweet`, `upload_media`, … Uses OAuth1 keys from an X app (Read+Write), kept in **1Password** and injected at launch by `op run` — no secrets on disk. Free tier ≈ 500 posts/month.
+
+   Launch Claude with the X secrets injected: `cx` (fish alias). Then `/tweet <idea>` → review → "post it". Set the `op://` paths in `op/secrets.env` (see `op/secrets.env.example`).
 
 ## Tasks
 

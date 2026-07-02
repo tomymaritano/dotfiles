@@ -93,6 +93,8 @@ if status is-interactive
 
     # tweets: `tweet "idea"` jots to ~/notes/tweets.md; `tweet` alone opens it.
     # Draft/post with Claude Code's /tweet command (see claude/commands/tweet.md).
+    # `cx` = Claude Code with X secrets injected from 1Password (for posting).
+    alias cx "op run --account my.1password.com --env-file=$HOME/dotfiles/op/secrets.env -- claude"
 
     # theme switcher (Ghostty + starship + nvim) — see functions/theme.fish
     complete -c theme -f -a "mocha tokyonight kanagawa rose-pine"
