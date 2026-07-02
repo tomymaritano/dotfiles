@@ -43,6 +43,14 @@
 [color]
 	ui = true
 
+# SSH commit signing via 1Password's op-ssh-sign. Signing is only turned ON in
+# ~/.gitconfig.local (with your signingkey) so commits don't fail before the
+# 1Password SSH agent + key are set up. See the README for the one-time steps.
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
 [alias]
 	s = status -sb
 	co = checkout

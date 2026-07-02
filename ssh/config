@@ -1,0 +1,16 @@
+# ~/.ssh/config
+
+Include ~/.colima/ssh_config
+
+# Use 1Password's SSH agent for all hosts — private keys stay in 1Password and
+# every use needs Touch ID. Enable it in 1Password → Settings → Developer.
+# The on-disk key below still works as a fallback until the agent is set up.
+Host *
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+Host github.com
+  HostName github.com
+  User git
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519

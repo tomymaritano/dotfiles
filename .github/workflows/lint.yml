@@ -13,7 +13,7 @@ jobs:
       - name: shellcheck
         run: |
           sudo apt-get update && sudo apt-get install -y shellcheck
-          shellcheck install.sh macos/defaults.sh sonarqube/setup-mcp.sh x/setup-mcp.sh claude/install-templates.sh
+          shellcheck bootstrap.sh install.sh macos/defaults.sh sonarqube/setup-mcp.sh x/setup-mcp.sh claude/install-templates.sh
 
       - name: stylua
         uses: JohnnyMorganz/stylua-action@v4
@@ -21,3 +21,18 @@ jobs:
           token: ${{ github.token }}
           version: latest
           args: --check nvim/lua
+
+  install:
+    # Smoke-test that install.sh reproduces the symlinks in a throwaway HOME.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: run install.sh against a scratch HOME
+        run: |
+          export HOME="$RUNNER_TEMP/fakehome"
+          mkdir -p "$HOME"
+          ./install.sh
+          test -L "$HOME/.gitconfig" || { echo "missing ~/.gitconfig symlink"; exit 1; }
+          test -L "$HOME/.config/starship.toml" || { echo "missing starship symlink"; exit 1; }
+          test -L "$HOME/.config/fish/config.fish" || { echo "missing fish symlink"; exit 1; }
+          echo "✓ install.sh reproduced the symlinks"

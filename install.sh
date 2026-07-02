@@ -23,10 +23,12 @@ link "$DOT/fish/config.fish"       "$CFG/fish/config.fish"
 link "$DOT/fish/fish_plugins"      "$CFG/fish/fish_plugins"
 link "$DOT/starship/starship.toml" "$CFG/starship.toml"
 
-# home-level dotfiles (git + editorconfig)
+# home-level dotfiles (git + editorconfig + ssh)
 link "$DOT/git/config"    "$HOME/.gitconfig"
 link "$DOT/git/ignore"    "$HOME/.gitignore_global"
 link "$DOT/editorconfig"  "$HOME/.editorconfig"
+mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+link "$DOT/ssh/config"    "$HOME/.ssh/config"
 
 # machine-local git overrides / secrets, pulled in by ~/.gitconfig's [include].
 # Never tracked. Seed an empty stub so git doesn't warn about a missing include.

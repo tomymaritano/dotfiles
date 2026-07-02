@@ -65,6 +65,15 @@ Ghostty (terminal)  →  fish (shell)  →  Neovim / LazyVim (editor)
 
 ## Installation
 
+Fresh machine — one line does the base setup (Homebrew, clone, `brew bundle`,
+symlinks, fish plugins, runtimes):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tomymaritano/dotfiles/main/bootstrap.sh | bash
+```
+
+Or step by step:
+
 ```bash
 git clone git@github.com:tomymaritano/dotfiles.git ~/dotfiles
 cd ~/dotfiles
@@ -140,6 +149,7 @@ matching **Ghostty theme**, **starship palette** and **Neovim colorscheme**:
 - **Ghostty** — reload with `Cmd+Shift+,` (or just open a new window).
 - **Neovim** — restart nvim. To *preview* themes live without committing, use
   LazyVim's picker: `<leader>uC` (that preview is not persisted; `theme` is what sticks).
+- **fzf / bat** — colors follow the theme too: `theme` sets `FZF_DEFAULT_OPTS` per theme, and `bat` uses `BAT_THEME=ansi` so it tracks the terminal palette. Applies to new shells.
 
 ### How it works internally
 
@@ -217,7 +227,7 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 | `theme <name>` | [switch the whole-stack theme](#themes) |
 | `sq-up` / `sq-down` / `sq-logs` | [SonarQube](#code-quality) container control |
 | `grokcode` | Claude Code engine on Grok ([see below](#ai-assistants)) |
-| `cx` | Claude Code with X secrets injected from 1Password (for posting) |
+| `claude` | wrapped to inject X/xAI/SonarQube secrets from 1Password (`op run`) |
 | `ghd` / `ghpr` | gh-dash PR/issue dashboard / open a PR |
 | `mise use node@22` | set a runtime version (global or per project) |
 | `tweet "idea"` | jot a tweet idea to `~/notes/tweets.md` |
@@ -239,11 +249,18 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 - **mise** activates here too; runtimes (node/python/go/…) come from it, not nvm. Global versions live in `mise/config.toml`; per project: `mise use node@22`.
 - Aliases & functions: see the [Keybindings cheatsheet](#keybindings).
 
-### git (`git/`) + editorconfig
-- `git/config` → `~/.gitconfig`: identity, sane defaults (`pull.rebase`, `push.autoSetupRemote`, `fetch.prune`), **delta** as the diff pager, and aliases (`git s`, `git lg`, `git undo`, `git pushf`, …).
-- Machine-specific or secret bits (credential helpers, signing keys, the coderabbit id) live in `~/.gitconfig.local`, pulled in via `[include]` — **not tracked**.
-- `git/ignore` → `~/.gitignore_global`: OS/editor cruft ignored in every repo.
-- `editorconfig` → `~/.editorconfig`: baseline indentation/charset for all projects.
+### git (`git/`) + ssh + editorconfig
+- `git/config` → `~/.gitconfig`: identity, sane defaults (`pull.rebase`, `push.autoSetupRemote`, `fetch.prune`), **delta** as the diff pager, aliases (`git s`, `git lg`, `git undo`, `git pushf`, …), and SSH signing wired to 1Password's `op-ssh-sign`.
+- Machine-specific or secret bits (signing key, coderabbit id) live in `~/.gitconfig.local`, pulled in via `[include]` — **not tracked**.
+- `ssh/config` → `~/.ssh/config`: routes auth through the **1Password SSH agent** (keys stay in 1Password, Touch ID to use); the on-disk key remains a fallback.
+- **Turn on signed commits** (one-time): enable *1Password → Settings → Developer → SSH agent*, add your public key to GitHub as **both** an Authentication and a Signing key, then add to `~/.gitconfig.local`:
+  ```ini
+  [user]
+      signingkey = ssh-ed25519 AAAA…your key…
+  [commit]
+      gpgsign = true
+  ```
+- `git/ignore` → `~/.gitignore_global`; `editorconfig` → `~/.editorconfig`.
 
 ### Neovim (`nvim/`)
 LazyVim base, personalized (not stock). The custom bits live in:
@@ -354,7 +371,7 @@ A workflow for drafting eng/product tweets without breaking flow:
    - `x-docs` (`https://docs.x.com/mcp`) — official X API docs search; no auth.
    - `x-twitter` — community poster ([Infatoshi/x-mcp](https://github.com/Infatoshi/x-mcp)) with `post_tweet`, `reply_to_tweet`, `quote_tweet`, `upload_media`, … Uses OAuth1 keys from an X app (Read+Write), kept in **1Password** and injected at launch by `op run` — no secrets on disk. Free tier ≈ 500 posts/month.
 
-   Launch Claude with the X secrets injected: `cx` (fish alias). Then `/tweet <idea>` → review → "post it". Set the `op://` paths in `op/secrets.env` (see `op/secrets.env.example`).
+   Just launch `claude` (it's wrapped to inject the X secrets from 1Password via `op run`). Then `/tweet <idea>` → review → "post it". Set the `op://` paths in `op/secrets.env` (see `op/secrets.env.example`).
 
 ## Tasks
 
@@ -401,6 +418,6 @@ fisher's own functions there are left untouched.)
 
 - macOS Apple Silicon (Homebrew under `/opt/homebrew`).
 - No secrets in the repo: `auth.json`, `.env`, `fish_variables` and `op/secrets.env` are in `.gitignore`.
-- **Secrets via 1Password (optional):** instead of `set -Ux` universal vars, keep API keys in 1Password and inject them per-process — copy `op/secrets.env.example` to `op/secrets.env` (the `op://` paths are pointers, not secrets), then launch `op run --env-file=~/dotfiles/op/secrets.env -- claude`. The secret never touches disk.
+- **Secrets via 1Password:** API keys (X, xAI, SonarQube) live in 1Password, not on disk. The `claude` fish function (`fish/functions/claude.fish`) wraps launches with `op run --env-file=op/secrets.env` so the MCP servers get their tokens at runtime (falls back to a plain launch if op is unavailable); `grokcode` does the same. Point `op/secrets.env` at your items via `op/secrets.env.example`.
 - The active theme lives in tracked files (`ghostty/config`, `starship.toml`), so
   running `theme <x>` shows up as a diff on those two files — that's expected.
