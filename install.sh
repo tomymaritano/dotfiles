@@ -30,11 +30,15 @@ for fn in "$DOT"/fish/functions/*.fish; do
   link "$fn" "$CFG/fish/functions/$(basename "$fn")"
 done
 
-# nvim: link our own files (don't clobber the user's lazy-lock.json)
+# nvim: link our own files. lazy-lock.json / lazyvim.json are tracked and
+# linked too, so plugin versions + extras stay reproducible across machines
+# (`:Lazy update` writes through the symlink into the repo — then commit it).
 link "$DOT/nvim/init.lua"     "$CFG/nvim/init.lua"
 link "$DOT/nvim/lua"          "$CFG/nvim/lua"
-[ -f "$DOT/nvim/stylua.toml" ]   && link "$DOT/nvim/stylua.toml"   "$CFG/nvim/stylua.toml"
-[ -f "$DOT/nvim/.neoconf.json" ] && link "$DOT/nvim/.neoconf.json" "$CFG/nvim/.neoconf.json"
+[ -f "$DOT/nvim/stylua.toml" ]    && link "$DOT/nvim/stylua.toml"     "$CFG/nvim/stylua.toml"
+[ -f "$DOT/nvim/.neoconf.json" ]  && link "$DOT/nvim/.neoconf.json"   "$CFG/nvim/.neoconf.json"
+[ -f "$DOT/nvim/lazy-lock.json" ] && link "$DOT/nvim/lazy-lock.json"  "$CFG/nvim/lazy-lock.json"
+[ -f "$DOT/nvim/lazyvim.json" ]   && link "$DOT/nvim/lazyvim.json"    "$CFG/nvim/lazyvim.json"
 
 # nvim theme state (runtime, not tracked): default to mocha if absent.
 # The `theme` command rewrites this; nvim reads it at startup.

@@ -1,0 +1,27 @@
+# SonarQube Community — reproducible local server.
+#
+#   docker compose -f sonarqube/docker-compose.yml up -d     # start
+#   docker compose -f sonarqube/docker-compose.yml down      # stop (keeps data)
+#
+# Dashboard: http://localhost:9000  (first login admin/admin → forces a change).
+# Volumes are given explicit names so the data survives re-creation and matches
+# a pre-existing `docker run` setup. Free Community edition; see the README.
+services:
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+volumes:
+  sonarqube_data:
+    name: sonarqube_data
+  sonarqube_extensions:
+    name: sonarqube_extensions
+  sonarqube_logs:
+    name: sonarqube_logs

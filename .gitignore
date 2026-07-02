@@ -1,6 +1,6 @@
-# nvim — generated state, not config
-nvim/lazy-lock.json
-nvim/lazyvim.json
+# nvim — runtime state, not config
+# (lazy-lock.json / lazyvim.json ARE tracked, on purpose, for reproducible
+#  plugin versions + extras — like a package-lock. theme.txt is per-machine.)
 nvim/theme.txt
 
 # macOS

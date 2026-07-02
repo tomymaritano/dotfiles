@@ -57,6 +57,7 @@ Ghostty (terminal)  →  fish (shell)  →  Neovim / LazyVim (editor)
 - **git** and, for the SSH clone below, a GitHub SSH key (or clone over HTTPS).
 - A **Nerd Font** — the `Brewfile` installs *JetBrainsMono Nerd Font*; Ghostty is
   already configured to use it. Other terminals need the font selected manually.
+- **Docker** (Docker Desktop or OrbStack) — only for the SonarQube server + its MCP; the rest of the setup works without it.
 
 ## Installation
 
@@ -222,16 +223,10 @@ Two layers that act at different moments: **SonarLint** (live, in nvim) and
 - Requires `openjdk@21` (Java) and `sonarlint-language-server` (installed by Mason).
 - Active for JS/TS/Python/HTML/CSS/XML.
 
-**2. SonarQube Server in Docker** — *full* analysis with a dashboard and quality gates.
+**2. SonarQube Server in Docker** — *full* analysis with a dashboard and quality gates. Reproducible via the tracked compose file (`sonarqube/docker-compose.yml`):
 
 ```bash
-docker run -d --name sonarqube \
-  -p 9000:9000 \
-  -v sonarqube_data:/opt/sonarqube/data \
-  -v sonarqube_extensions:/opt/sonarqube/extensions \
-  -v sonarqube_logs:/opt/sonarqube/logs \
-  --restart unless-stopped \
-  sonarqube:community
+docker compose -f sonarqube/docker-compose.yml up -d
 ```
 
 - Dashboard: <http://localhost:9000> — initial login `admin` / `admin` (forces a change).
@@ -255,28 +250,21 @@ Claude Code can query your SonarQube **directly** through the official
 issues in this file"* and Claude pulls the rules/issues itself — no copy-paste.
 
 Configured **per user** (in `~/.claude.json`, **not** this repo) and reads a
-token from the gitignored fish universal var `SONARQUBE_TOKEN`. To recreate it
-on a new machine:
+token from the gitignored fish universal var `SONARQUBE_TOKEN`. One script does
+the whole bridge — generate the token, store it, and register the MCP server:
 
 ```bash
-# 1) generate a USER token on your local SonarQube (needs admin login)
-curl -s -u admin:ADMIN_PASSWORD -X POST \
-  "http://localhost:9000/api/user_tokens/generate?name=claude-mcp&type=USER_TOKEN"
-
-# 2) store it for fish (universal + exported; lives in gitignored fish_variables)
-set -Ux SONARQUBE_TOKEN squ_xxxxxxxx
-
-# 3) register the MCP server with Claude Code (user scope)
-claude mcp add -s user sonarqube \
-  --env 'SONARQUBE_TOKEN=${SONARQUBE_TOKEN}' \
-  --env SONARQUBE_URL=http://host.docker.internal:9000 \
-  -- docker run --init -i --rm -e SONARQUBE_TOKEN -e SONARQUBE_URL sonarsource/sonarqube-mcp
+sonarqube/setup-mcp.sh              # uses the default admin password
+sonarqube/setup-mcp.sh 'my-pass'    # if you changed the SonarQube admin password
 ```
+
+It runs `claude mcp add -s user sonarqube … sonarsource/sonarqube-mcp` under the
+hood. Notes:
 
 - `host.docker.internal:9000` is how the MCP container reaches SonarQube on the host.
 - Launch `claude` from **fish** so `${SONARQUBE_TOKEN}` is in its environment.
 - Issues only show up once a project has been analyzed with `sonar-scanner` (above).
-- Check status with `claude mcp list`; the `USER` token type is required.
+- Check status with `claude mcp list`; a `USER`-type token is required (the script uses it).
 
 ## AI assistants
 
