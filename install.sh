@@ -66,6 +66,10 @@ done
 for agent in "$DOT"/claude/agents/*.md; do
   [ -e "$agent" ] && link "$agent" "$HOME/.claude/agents/$(basename "$agent")"
 done
+mkdir -p "$HOME/.claude/skills"
+for skill in "$DOT"/claude/skills/*/; do
+  [ -d "$skill" ] && link "${skill%/}" "$HOME/.claude/skills/$(basename "$skill")"
+done
 [ -f "$DOT/claude/voice.md" ]  && link "$DOT/claude/voice.md"  "$HOME/.claude/voice.md"
 [ -f "$DOT/claude/CLAUDE.md" ] && link "$DOT/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 
@@ -75,3 +79,4 @@ echo "  1) brew bundle --file=$DOT/Brewfile"
 echo "  2) fisher install jorgebucaran/fisher  (then: fisher update)"
 echo "  3) open nvim so LazyVim/Mason install plugins + sonarlint-language-server"
 echo "  4) gh extension install dlvhdr/gh-dash   (PR/issue dashboard: 'ghd')"
+echo "  5) ./claude/install-templates.sh          (community Claude Code agents/skills)"

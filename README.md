@@ -289,6 +289,19 @@ Installed as global CLIs (their auth is local and **not** in this repo):
 - **Grok** (xAI, native CLI) — `grok`
 - **CodeRabbit** — `coderabbit` / `cr`
 
+### Claude Code config (`claude/`)
+
+Tracked here and symlinked into `~/.claude`:
+- **`CLAUDE.md`** — global preferences applied in every project (environment, conventions, stack).
+- **`commands/`** — slash commands *you* run: `/tweet`, `/commit`.
+- **`agents/`** — subagents Claude delegates to: `reviewer` (correctness/security/reuse review).
+- **`skills/`** — capabilities Claude auto-activates by description: `changelog` (release notes from git).
+- **`voice.md`** — tweet voice guide used by `/tweet`.
+
+Third-party agents/skills from [aitmpl.com](https://aitmpl.com) are **not** vendored — re-fetch them on a new machine with `./claude/install-templates.sh` (or `just claude-templates`): agents *ui-ux-designer, devops-engineer, test-engineer, deployment-engineer*; skills *senior-frontend, frontend-design, ui-ux-pro-max, senior-security, clean-code*.
+
+Inside Neovim, `claudecode.nvim` bridges to the `claude` CLI under `<leader>a` (see [Keybindings](#keybindings)).
+
 ### Claude Code running on Grok (`ccr/config.json`)
 
 The Claude Code *engine* can run on xAI Grok via [claude-code-router](https://github.com/musistudio/claude-code-router) (CCR), a local proxy that translates Anthropic ⇄ OpenAI format. Run it with the `grokcode` alias:
