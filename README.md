@@ -32,7 +32,7 @@ My macOS (Apple Silicon) terminal setup: **Ghostty + fish + Neovim (LazyVim)**, 
 Ghostty (terminal)  →  fish (shell)  →  Neovim / LazyVim (editor)
    `theme` switcher     starship prompt     LSP + Telescope + SonarLint
    JetBrains Nerd Font  zoxide · eza · bat  ripgrep · fd
-   blur + transparency  fzf · nvm.fish      Mason
+   blur + transparency  fzf · atuin · mise  Mason · dap · neotest
 
    theme kanagawa | mocha | tokyonight | rose-pine   ← restyles all three
 ```
@@ -49,7 +49,7 @@ Ghostty (terminal)  →  fish (shell)  →  Neovim / LazyVim (editor)
 | search | [ripgrep](https://github.com/BurntSushi/ripgrep) + [fd](https://github.com/sharkdp/fd) | fast; used by Telescope in nvim |
 | history | [atuin](https://atuin.sh) | fuzzy `Ctrl+R` shell history, per-dir + synced |
 | env | [direnv](https://direnv.net) | auto-load per-project env from `.envrc` |
-| node | [nvm.fish](https://github.com/jorgebucaran/nvm.fish) | native node version management in fish |
+| runtimes | [mise](https://mise.jdx.dev) | node/python/go/… versions (replaces nvm); global set in `mise/config.toml` |
 | git | [lazygit](https://github.com/jesseduffield/lazygit) + [delta](https://github.com/dandavison/delta) | git TUI (`lg`) + pretty diffs |
 | tasks | [just](https://github.com/casey/just) | repo task runner (see [Tasks](#tasks)) |
 | quality | SonarLint (nvim) + SonarQube (Docker) | see [Code quality](#code-quality) |
@@ -75,15 +75,19 @@ brew bundle --file=Brewfile
 # 2) Symlink the configs into ~/.config (backs up anything existing)
 ./install.sh
 
-# 3) fish plugins (fisher + nvm.fish)
+# 3) fish plugins (fisher)
 fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher'
 fish -c 'fisher update'   # installs what's in fish/fish_plugins
 
-# 4) default node via nvm.fish
-fish -c 'nvm install 24; and set --universal nvm_default_version 24'
+# 4) runtimes via mise (versions pinned in mise/config.toml)
+mise install
 
 # 5) Open nvim — LazyVim + Mason install plugins and the SonarLint language server
 nvim
+
+# 6) (optional) community Claude Code agents/skills, and the gh dashboard
+./claude/install-templates.sh
+gh extension install dlvhdr/gh-dash
 ```
 
 `install.sh` symlinks each config into `~/.config` (and a few into `~`, like
@@ -187,6 +191,19 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 | `<leader>uC` | Colorscheme picker (live preview) |
 | `<leader>l` / `<leader>cm` | Lazy / Mason |
 
+### Neovim — AI, tests, navigate
+
+| Key | Action |
+|-----|--------|
+| `<leader>ac` / `<leader>af` | Toggle / focus **Claude Code** (claudecode.nvim) |
+| `<leader>as` (visual) | Send selection to Claude · `<leader>ab` add buffer |
+| `<leader>aa` / `<leader>ad` | Accept / reject Claude's diff |
+| `<leader>H` · `<leader>1`…`5` | **Harpoon** add file · jump to pinned file |
+| `<leader>t` group | **neotest** — run/debug tests · `<F5>` dap continue |
+| `<C-d>` / `<C-u>`, `J` | Centered half-page jump, join keeping cursor *(custom)* |
+
+> Custom motions (`<leader>p` paste-keep-yank, `<leader>d` blackhole-delete, `<leader>fD` open config) live in `nvim/lua/config/keymaps.lua`.
+
 ### fish — aliases & functions
 
 | Command | What it does |
@@ -200,7 +217,10 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 | `theme <name>` | [switch the whole-stack theme](#themes) |
 | `sq-up` / `sq-down` / `sq-logs` | [SonarQube](#code-quality) container control |
 | `grokcode` | Claude Code engine on Grok ([see below](#ai-assistants)) |
-| `nvm install/use/list` | node version management |
+| `cx` | Claude Code with X secrets injected from 1Password (for posting) |
+| `ghd` / `ghpr` | gh-dash PR/issue dashboard / open a PR |
+| `mise use node@22` | set a runtime version (global or per project) |
+| `tweet "idea"` | jot a tweet idea to `~/notes/tweets.md` |
 
 ## Per-tool notes
 
@@ -216,7 +236,7 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 - Initializes starship, zoxide, fzf, **atuin** and **direnv** in interactive sessions only.
 - **atuin** owns `Ctrl+R` (fuzzy history). Run `atuin import auto` once to seed it from your old history; `atuin login` is optional (only for cross-machine sync).
 - **direnv**: drop an `.envrc` in a project and run `direnv allow` once — vars load/unload as you `cd` in and out.
-- node is managed by **nvm.fish** (`nvm install 22`, `nvm use 20`, `nvm list`).
+- **mise** activates here too; runtimes (node/python/go/…) come from it, not nvm. Global versions live in `mise/config.toml`; per project: `mise use node@22`.
 - Aliases & functions: see the [Keybindings cheatsheet](#keybindings).
 
 ### git (`git/`) + editorconfig
@@ -226,9 +246,16 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 - `editorconfig` → `~/.editorconfig`: baseline indentation/charset for all projects.
 
 ### Neovim (`nvim/`)
-LazyVim base. The custom bits live in:
-- `lua/config/` → options, keymaps, autocmds.
-- `lua/plugins/` → extra plugins: `colorscheme.lua` (themes) + `dashboard.lua` (banner) — see [Themes](#themes) — and `sonarlint.lua`.
+LazyVim base, personalized (not stock). The custom bits live in:
+- `lua/config/` → `options.lua`, `keymaps.lua`, `autocmds.lua` (see [Keybindings](#keybindings)).
+- `lua/plugins/`:
+  - `colorscheme.lua` + `dashboard.lua` — themes & banner (see [Themes](#themes)).
+  - `lang.lua` — LazyVim extras for TS/JS, Python, Go, Rust, Docker, JSON, YAML + Prettier, ESLint and neotest (each: LSP + treesitter + formatter + test/debug adapter, via Mason).
+  - `editor.lua` — nvim-dap (debug), harpoon2 (pin/jump files), octo (GitHub PRs), treesitter-context.
+  - `claudecode.lua` — Claude Code inside nvim under `<leader>a`.
+  - `sonarlint.lua` — live SonarLint ([Code quality](#code-quality)).
+- Runtimes (Go/Rust compilers, etc.) come from **mise**, not Mason — `mise use -g go@latest rust@stable`.
+- Language plugin versions are pinned in the tracked `lazy-lock.json`; update with `:Lazy update` then commit it.
 
 ## Code quality
 
