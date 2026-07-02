@@ -1,6 +1,8 @@
 # dotfiles
 
-<img width="4688" height="2976" alt="image" src="https://github.com/user-attachments/assets/9b953794-44a2-43e7-a6ca-7309cf7ef65e" />
+
+
+<img width="4688" height="2976" alt="image" src="https://github.com/user-attachments/assets/7dca5eed-33b1-455f-aff4-7452e725d813" />
 
 
 ![platform](https://img.shields.io/badge/platform-macOS%20Apple%20Silicon-000000?logo=apple&logoColor=white)
