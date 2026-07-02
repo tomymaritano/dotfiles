@@ -16,7 +16,9 @@ return {
   { import = "lazyvim.plugins.extras.lang.json" },
   { import = "lazyvim.plugins.extras.lang.yaml" },
 
-  -- formatting + testing
+  -- formatting, linting + testing
+  -- (JavaScript/JSX is already covered by the typescript extra above.)
   { import = "lazyvim.plugins.extras.formatting.prettier" },
+  { import = "lazyvim.plugins.extras.linting.eslint" }, -- eslint diagnostics + fix-on-save
   { import = "lazyvim.plugins.extras.test.core" }, -- neotest: run/debug tests in-editor
 }
