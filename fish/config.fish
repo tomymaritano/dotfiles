@@ -70,6 +70,9 @@ if status is-interactive
     alias gs  "git status"
     alias gd  "git diff"
 
+    # theme switcher (Ghostty + starship + nvim) — see functions/theme.fish
+    complete -c theme -f -a "mocha tokyonight kanagawa rose-pine"
+
     # SonarQube (Docker) - dashboard at http://localhost:9000
     alias sq-up   "docker start sonarqube"
     alias sq-down "docker stop sonarqube"

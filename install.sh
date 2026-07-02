@@ -23,11 +23,22 @@ link "$DOT/fish/config.fish"       "$CFG/fish/config.fish"
 link "$DOT/fish/fish_plugins"      "$CFG/fish/fish_plugins"
 link "$DOT/starship/starship.toml" "$CFG/starship.toml"
 
+# fish functions: link our files individually — fisher owns this directory
+# and installs plugin functions (nvm.fish, fisher.fish) alongside ours.
+mkdir -p "$CFG/fish/functions"
+for fn in "$DOT"/fish/functions/*.fish; do
+  link "$fn" "$CFG/fish/functions/$(basename "$fn")"
+done
+
 # nvim: link our own files (don't clobber the user's lazy-lock.json)
 link "$DOT/nvim/init.lua"     "$CFG/nvim/init.lua"
 link "$DOT/nvim/lua"          "$CFG/nvim/lua"
 [ -f "$DOT/nvim/stylua.toml" ]   && link "$DOT/nvim/stylua.toml"   "$CFG/nvim/stylua.toml"
 [ -f "$DOT/nvim/.neoconf.json" ] && link "$DOT/nvim/.neoconf.json" "$CFG/nvim/.neoconf.json"
+
+# nvim theme state (runtime, not tracked): default to mocha if absent.
+# The `theme` command rewrites this; nvim reads it at startup.
+[ -f "$CFG/nvim/theme.txt" ] || echo "mocha" > "$CFG/nvim/theme.txt"
 
 echo
 echo "Done. Next:"

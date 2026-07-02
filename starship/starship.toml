@@ -134,3 +134,54 @@ surface0  = "#313244"
 base      = "#1e1e2e"
 mantle    = "#181825"
 crust     = "#11111b"
+
+# ---------------------------------------------------------------------------
+# TokyoNight (Moon) palette
+# ---------------------------------------------------------------------------
+[palettes.tokyonight]
+text     = "#c8d3f5"
+base     = "#222436"
+surface0 = "#2f334d"
+surface1 = "#3b4261"
+surface2 = "#444a73"
+overlay0 = "#636da6"
+overlay1 = "#828bb8"
+red      = "#ff757f"
+peach    = "#ff966c"
+yellow   = "#ffc777"
+green    = "#c3e88d"
+blue     = "#82aaff"
+
+# ---------------------------------------------------------------------------
+# Kanagawa (Wave) palette
+# ---------------------------------------------------------------------------
+[palettes.kanagawa]
+text     = "#dcd7ba"
+base     = "#1f1f28"
+surface0 = "#2a2a37"
+surface1 = "#363646"
+surface2 = "#54546d"
+overlay0 = "#727169"
+overlay1 = "#938aa9"
+red      = "#c34043"
+peach    = "#ffa066"
+yellow   = "#e6c384"
+green    = "#98bb6c"
+blue     = "#7e9cd8"
+
+# ---------------------------------------------------------------------------
+# Rose Pine (Moon) palette
+# ---------------------------------------------------------------------------
+[palettes.rose_pine]
+text     = "#e0def4"
+base     = "#232136"
+surface0 = "#2a273f"
+surface1 = "#393552"
+surface2 = "#44415a"
+overlay0 = "#6e6a86"
+overlay1 = "#908caa"
+red      = "#eb6f92"
+peach    = "#f6c177"
+yellow   = "#f6c177"
+green    = "#9ccfd8"
+blue     = "#3e8fb0"

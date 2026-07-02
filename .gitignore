@@ -1,6 +1,7 @@
 # nvim — generated state, not config
 nvim/lazy-lock.json
 nvim/lazyvim.json
+nvim/theme.txt
 
 # macOS
 .DS_Store
