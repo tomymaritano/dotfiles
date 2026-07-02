@@ -298,7 +298,7 @@ Tracked here and symlinked into `~/.claude`:
 - **`skills/`** — capabilities Claude auto-activates by description: `changelog` (release notes from git).
 - **`voice.md`** — tweet voice guide used by `/tweet`.
 
-Third-party agents/skills from [aitmpl.com](https://aitmpl.com) are **not** vendored — re-fetch them on a new machine with `./claude/install-templates.sh` (or `just claude-templates`): agents *ui-ux-designer, devops-engineer, test-engineer, deployment-engineer*; skills *senior-frontend, frontend-design, ui-ux-pro-max, senior-security, clean-code*.
+Third-party components from [aitmpl.com](https://aitmpl.com) are **not** vendored — re-fetch them on a new machine with `./claude/install-templates.sh` (or `just claude-templates`): agents *ui-ux-designer, devops-engineer, test-engineer, deployment-engineer*; skills *senior-frontend, frontend-design, ui-ux-pro-max, senior-security, clean-code, react-best-practices*; and a *simple-notifications* hook (desktop notice when Claude finishes or needs input, merged into `settings.local.json`).
 
 Inside Neovim, `claudecode.nvim` bridges to the `claude` CLI under `<leader>a` (see [Keybindings](#keybindings)).
 

@@ -20,5 +20,9 @@ run --skill creative-design/frontend-design
 run --skill creative-design/ui-ux-pro-max
 run --skill development/senior-security
 run --skill development/clean-code
+run --skill web-development/react-best-practices
+
+# hooks (merged into ~/.claude/settings.local.json)
+run --hook automation/simple-notifications # desktop notice when Claude finishes / needs input
 
 echo "✓ community templates installed into ~/.claude"
