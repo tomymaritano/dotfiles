@@ -247,6 +247,37 @@ docker run -d --name sonarqube \
 
 - Container control: `sq-up` / `sq-down` / `sq-logs`.
 
+### Let the AI read your issues — SonarQube MCP
+
+Claude Code can query your SonarQube **directly** through the official
+[SonarQube MCP server](https://github.com/SonarSource/sonarqube-mcp-server)
+(free, works with Community Build). Once wired, you can ask *"fix the SonarQube
+issues in this file"* and Claude pulls the rules/issues itself — no copy-paste.
+
+Configured **per user** (in `~/.claude.json`, **not** this repo) and reads a
+token from the gitignored fish universal var `SONARQUBE_TOKEN`. To recreate it
+on a new machine:
+
+```bash
+# 1) generate a USER token on your local SonarQube (needs admin login)
+curl -s -u admin:ADMIN_PASSWORD -X POST \
+  "http://localhost:9000/api/user_tokens/generate?name=claude-mcp&type=USER_TOKEN"
+
+# 2) store it for fish (universal + exported; lives in gitignored fish_variables)
+set -Ux SONARQUBE_TOKEN squ_xxxxxxxx
+
+# 3) register the MCP server with Claude Code (user scope)
+claude mcp add -s user sonarqube \
+  --env 'SONARQUBE_TOKEN=${SONARQUBE_TOKEN}' \
+  --env SONARQUBE_URL=http://host.docker.internal:9000 \
+  -- docker run --init -i --rm -e SONARQUBE_TOKEN -e SONARQUBE_URL sonarsource/sonarqube-mcp
+```
+
+- `host.docker.internal:9000` is how the MCP container reaches SonarQube on the host.
+- Launch `claude` from **fish** so `${SONARQUBE_TOKEN}` is in its environment.
+- Issues only show up once a project has been analyzed with `sonar-scanner` (above).
+- Check status with `claude mcp list`; the `USER` token type is required.
+
 ## AI assistants
 
 Installed as global CLIs (their auth is local and **not** in this repo):
