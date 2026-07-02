@@ -43,9 +43,22 @@ if status is-interactive
         zoxide init fish | source
     end
 
-    # fzf: Ctrl+T (files), Ctrl+R (history), Alt+C (cd)
+    # fzf: Ctrl+T (files), Alt+C (cd). (Ctrl+R is taken over by atuin below.)
     if type -q fzf
         fzf --fish | source
+    end
+
+    # atuin: better shell history with fuzzy search on Ctrl+R (synced, per-dir
+    # context). First run once: `atuin import auto` to seed from your old history.
+    # Sourced after fzf so it wins the Ctrl+R binding.
+    if type -q atuin
+        atuin init fish | source
+    end
+
+    # direnv: auto-loads a directory's .envrc when you cd in (per-project env vars
+    # / tool versions). Run `direnv allow` once per project to trust its .envrc.
+    if type -q direnv
+        direnv hook fish | source
     end
 
     # --- Aliases ---

@@ -1,0 +1,62 @@
+# ~/.gitconfig — general config (shared). Machine-specific or secret bits go in
+# ~/.gitconfig.local, pulled in by the [include] at the bottom (not tracked).
+
+[user]
+	name = Tomas Maritano
+	email = tm@psynth.ai
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = true          # rebase instead of merge on `git pull` → linear history
+
+[push]
+	autoSetupRemote = true # `git push` on a new branch just works (sets upstream)
+	default = current
+
+[fetch]
+	prune = true           # drop remote-tracking branches that were deleted upstream
+
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore_global
+	pager = delta          # pretty diffs (needs git-delta)
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true        # n / N to jump between files in a diff
+	line-numbers = true
+
+[merge]
+	conflictstyle = zdiff3 # show the common ancestor in conflicts
+
+[rebase]
+	autosquash = true
+	autostash = true       # auto-stash/pop your dirty tree around a rebase
+
+[diff]
+	colorMoved = default   # highlight moved lines differently from add/remove
+
+[color]
+	ui = true
+
+[alias]
+	s = status -sb
+	co = checkout
+	sw = switch
+	br = branch
+	cm = commit -m
+	amend = commit --amend --no-edit
+	unstage = restore --staged
+	undo = reset --soft HEAD~1
+	last = log -1 HEAD --stat
+	lg = log --oneline --graph --decorate -20
+	pushf = push --force-with-lease   # safer force-push
+
+# Machine-local overrides / secrets (credential helpers, signing keys, the
+# coderabbit machineId, work email, …). Created by install.sh if missing.
+[include]
+	path = ~/.gitconfig.local

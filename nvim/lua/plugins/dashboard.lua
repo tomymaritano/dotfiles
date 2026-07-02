@@ -7,7 +7,7 @@
 local ACCENTS = {
   catppuccin = "#cba6f7", -- mauve
   tokyonight = "#82aaff", -- blue
-  kanagawa   = "#e6c384", -- gold
+  kanagawa = "#e6c384", -- gold
   ["rose%-pine"] = "#eb6f92", -- love / pink
 }
 

@@ -23,6 +23,15 @@ link "$DOT/fish/config.fish"       "$CFG/fish/config.fish"
 link "$DOT/fish/fish_plugins"      "$CFG/fish/fish_plugins"
 link "$DOT/starship/starship.toml" "$CFG/starship.toml"
 
+# home-level dotfiles (git + editorconfig)
+link "$DOT/git/config"    "$HOME/.gitconfig"
+link "$DOT/git/ignore"    "$HOME/.gitignore_global"
+link "$DOT/editorconfig"  "$HOME/.editorconfig"
+
+# machine-local git overrides / secrets, pulled in by ~/.gitconfig's [include].
+# Never tracked. Seed an empty stub so git doesn't warn about a missing include.
+[ -f "$HOME/.gitconfig.local" ] || printf '# machine-local git overrides (not tracked)\n' > "$HOME/.gitconfig.local"
+
 # fish functions: link our files individually — fisher owns this directory
 # and installs plugin functions (nvm.fish, fisher.fish) alongside ours.
 mkdir -p "$CFG/fish/functions"

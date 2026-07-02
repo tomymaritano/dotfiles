@@ -15,12 +15,18 @@ brew "fzf"                              # fuzzy finder
 brew "ripgrep"                          # fast grep (used by nvim/telescope)
 brew "fd"                               # fast find
 brew "lazygit"                          # git TUI
+brew "git-delta"                        # pretty git diffs (git pager)
+brew "atuin"                            # shell history: fuzzy Ctrl+R, synced
+brew "direnv"                           # per-directory env (.envrc)
 
 # --- Code quality ---
 brew "openjdk@21"                       # Java runtime (for the SonarLint LS)
 brew "sonar-scanner"                    # local analysis against SonarQube
 # The SonarQube server runs in Docker, see README
 
-# --- Misc ---
+# --- Dev tooling ---
 brew "gh"                               # GitHub CLI
 brew "git"
+brew "just"                             # command runner (see justfile)
+brew "shellcheck"                       # shell linter (CI + `just lint`)
+brew "stylua"                           # Lua formatter (nvim config)

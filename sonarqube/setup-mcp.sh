@@ -47,6 +47,9 @@ fish -c "set -Ux SONARQUBE_TOKEN $token"
 echo "· registering the MCP server with Claude Code (user scope) ..."
 # host.docker.internal lets the MCP container reach SonarQube on the host.
 claude mcp remove -s user sonarqube 2>/dev/null || true
+# SC2016: the single quotes are intentional — Claude Code (not bash) expands
+# ${SONARQUBE_TOKEN} at MCP launch, reading it from the environment.
+# shellcheck disable=SC2016
 claude mcp add -s user sonarqube \
   --env 'SONARQUBE_TOKEN=${SONARQUBE_TOKEN}' \
   --env SONARQUBE_URL=http://host.docker.internal:9000 \

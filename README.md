@@ -21,6 +21,7 @@ My macOS (Apple Silicon) terminal setup: **Ghostty + fish + Neovim (LazyVim)**, 
 - [Per-tool notes](#per-tool-notes)
 - [Code quality](#code-quality)
 - [AI assistants](#ai-assistants)
+- [Tasks (just)](#tasks)
 - [Updating](#updating)
 - [Uninstall](#uninstall)
 - [Notes](#notes)
@@ -46,8 +47,11 @@ Ghostty (terminal)  →  fish (shell)  →  Neovim / LazyVim (editor)
 | `ls` | [eza](https://eza.rocks) | listing with icons + git |
 | `cat` | [bat](https://github.com/sharkdp/bat) | syntax highlighting |
 | search | [ripgrep](https://github.com/BurntSushi/ripgrep) + [fd](https://github.com/sharkdp/fd) | fast; used by Telescope in nvim |
+| history | [atuin](https://atuin.sh) | fuzzy `Ctrl+R` shell history, per-dir + synced |
+| env | [direnv](https://direnv.net) | auto-load per-project env from `.envrc` |
 | node | [nvm.fish](https://github.com/jorgebucaran/nvm.fish) | native node version management in fish |
-| git | [lazygit](https://github.com/jesseduffield/lazygit) | git TUI (`lg`) |
+| git | [lazygit](https://github.com/jesseduffield/lazygit) + [delta](https://github.com/dandavison/delta) | git TUI (`lg`) + pretty diffs |
+| tasks | [just](https://github.com/casey/just) | repo task runner (see [Tasks](#tasks)) |
 | quality | SonarLint (nvim) + SonarQube (Docker) | see [Code quality](#code-quality) |
 
 ## Requirements
@@ -82,9 +86,13 @@ fish -c 'nvm install 24; and set --universal nvm_default_version 24'
 nvim
 ```
 
-`install.sh` symlinks each config into `~/.config` and **backs up** anything that
-was already there to `*.bak.<timestamp>` — so it's safe to re-run and easy to undo
-(see [Uninstall](#uninstall)).
+`install.sh` symlinks each config into `~/.config` (and a few into `~`, like
+`.gitconfig`) and **backs up** anything already there to `*.bak.<timestamp>` — so
+it's safe to re-run and easy to undo (see [Uninstall](#uninstall)).
+
+Optional: `./macos/defaults.sh` applies opinionated macOS system settings (fast
+key repeat, Finder tweaks, screenshots → `~/Screenshots`). From then on, `just`
+runs the common tasks (see [Tasks](#tasks)).
 
 ## Themes
 
@@ -205,9 +213,17 @@ see [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps) for the full list.
 
 ### fish (`fish/config.fish`)
 - Loads Homebrew, sets `EDITOR=nvim`, adds Java (openjdk@21) to PATH for SonarLint.
-- Initializes starship, zoxide and fzf in interactive sessions only.
+- Initializes starship, zoxide, fzf, **atuin** and **direnv** in interactive sessions only.
+- **atuin** owns `Ctrl+R` (fuzzy history). Run `atuin import auto` once to seed it from your old history; `atuin login` is optional (only for cross-machine sync).
+- **direnv**: drop an `.envrc` in a project and run `direnv allow` once — vars load/unload as you `cd` in and out.
 - node is managed by **nvm.fish** (`nvm install 22`, `nvm use 20`, `nvm list`).
 - Aliases & functions: see the [Keybindings cheatsheet](#keybindings).
+
+### git (`git/`) + editorconfig
+- `git/config` → `~/.gitconfig`: identity, sane defaults (`pull.rebase`, `push.autoSetupRemote`, `fetch.prune`), **delta** as the diff pager, and aliases (`git s`, `git lg`, `git undo`, `git pushf`, …).
+- Machine-specific or secret bits (credential helpers, signing keys, the coderabbit id) live in `~/.gitconfig.local`, pulled in via `[include]` — **not tracked**.
+- `git/ignore` → `~/.gitignore_global`: OS/editor cruft ignored in every repo.
+- `editorconfig` → `~/.editorconfig`: baseline indentation/charset for all projects.
 
 ### Neovim (`nvim/`)
 LazyVim base. The custom bits live in:
@@ -288,16 +304,31 @@ grokcode   # = env CLAUDE_CONFIG_DIR=~/.claude-grok ANTHROPIC_CUSTOM_MODEL_OPTIO
 - The model lives at `~/.claude-code-router/config.json` `Router` block; `ccr ui` opens a web editor.
 - Note: unofficial/unsupported by Anthropic; tool-use/agentic editing on Grok can be less reliable than native Claude.
 
+## Tasks
+
+Common jobs are wrapped in a [`justfile`](https://github.com/casey/just) — run
+`just` to list them:
+
+| Recipe | What it does |
+|--------|--------------|
+| `just install` | symlink configs (`./install.sh`) |
+| `just brew` | install/update from the `Brewfile` |
+| `just update` | pull + re-link + brew + fish plugins |
+| `just lint` | shellcheck + `stylua --check` (same as CI) |
+| `just fmt` | auto-format the Lua config |
+| `just macos` | apply `macos/defaults.sh` |
+| `just sonar` | start SonarQube + wire the [MCP bridge](#let-the-ai-read-your-issues--sonarqube-mcp) |
+
+Shell scripts and Lua are linted on every push by `.github/workflows/lint.yml`.
+
 ## Updating
 
 ```bash
-cd ~/dotfiles && git pull
-./install.sh                     # re-link (safe; re-backs up anything non-symlinked)
-brew bundle --file=Brewfile      # pick up new tools
-fish -c 'fisher update'          # update fish plugins
+just update    # git pull --rebase + ./install.sh + brew bundle + fisher update
 ```
 
-Inside nvim: `:Lazy sync` to update plugins, `:Mason` to manage language servers.
+Inside nvim: `:Lazy sync` to update plugins (commit the changed `lazy-lock.json`),
+`:Mason` to manage language servers.
 
 ## Uninstall
 
