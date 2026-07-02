@@ -57,13 +57,17 @@ link "$DOT/nvim/lua"          "$CFG/nvim/lua"
 mkdir -p "$CFG/mise"
 [ -f "$DOT/mise/config.toml" ] && link "$DOT/mise/config.toml" "$CFG/mise/config.toml"
 
-# Claude Code: link our custom slash commands + the tweet voice guide.
+# Claude Code: link our slash commands, subagents, voice guide and global memory.
 # ~/.claude is otherwise managed by Claude Code, so link files individually.
-mkdir -p "$HOME/.claude/commands"
+mkdir -p "$HOME/.claude/commands" "$HOME/.claude/agents"
 for cmd in "$DOT"/claude/commands/*.md; do
   [ -e "$cmd" ] && link "$cmd" "$HOME/.claude/commands/$(basename "$cmd")"
 done
-[ -f "$DOT/claude/voice.md" ] && link "$DOT/claude/voice.md" "$HOME/.claude/voice.md"
+for agent in "$DOT"/claude/agents/*.md; do
+  [ -e "$agent" ] && link "$agent" "$HOME/.claude/agents/$(basename "$agent")"
+done
+[ -f "$DOT/claude/voice.md" ]  && link "$DOT/claude/voice.md"  "$HOME/.claude/voice.md"
+[ -f "$DOT/claude/CLAUDE.md" ] && link "$DOT/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 
 echo
 echo "Done. Next:"
