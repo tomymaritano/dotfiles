@@ -31,3 +31,4 @@ brew "mise"                             # runtime version manager (node/python/â
 brew "just"                             # command runner (see justfile)
 brew "shellcheck"                       # shell linter (CI + `just lint`)
 brew "stylua"                           # Lua formatter (nvim config)
+brew "gitleaks"                         # secret scanner (pre-commit hook)

@@ -34,6 +34,10 @@ link "$DOT/ssh/config"    "$HOME/.ssh/config"
 # Never tracked. Seed an empty stub so git doesn't warn about a missing include.
 [ -f "$HOME/.gitconfig.local" ] || printf '# machine-local git overrides (not tracked)\n' > "$HOME/.gitconfig.local"
 
+# gitleaks pre-commit hook, applied to every repo (secret scanner). The hook
+# itself no-ops if gitleaks isn't installed, so this never blocks a commit.
+git config --file "$HOME/.gitconfig.local" core.hooksPath "$DOT/git/hooks"
+
 # fish functions: link our files individually — fisher owns this directory
 # and installs plugin functions (nvm.fish, fisher.fish) alongside ours.
 mkdir -p "$CFG/fish/functions"

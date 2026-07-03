@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Block commits that contain secrets, using gitleaks. Installed globally via
+# core.hooksPath (set by install.sh), so it guards every repo. Skips gracefully
+# if gitleaks isn't installed, so a commit never fails just for lacking the tool.
+if ! command -v gitleaks >/dev/null 2>&1; then
+  exit 0
+fi
+
+if ! gitleaks git --staged --no-banner --redact; then
+  echo
+  echo "✗ commit blocked — gitleaks found a possible secret in the staged changes (above)."
+  echo "  Fix: unstage/remove it. False positive? add an allowlist to .gitleaks.toml,"
+  echo "  or bypass this one commit with:  git commit --no-verify"
+  exit 1
+fi
