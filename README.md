@@ -438,6 +438,6 @@ fisher's own functions there are left untouched.)
 - No secrets in the repo: `auth.json`, `.env`, `fish_variables` and `op/secrets.env` are in `.gitignore`.
 - **Secret scanning:** a global pre-commit hook (`git/hooks/pre-commit`, wired via `core.hooksPath`) runs **[gitleaks](https://github.com/gitleaks/gitleaks)** on staged changes and **blocks the commit** if it detects a key/token — a safety net so nothing sensitive ever reaches this public repo. Config + allowlists in `.gitleaks.toml`; bypass one commit with `git commit --no-verify`.
 - **Secrets via 1Password:** API keys (X, xAI, SonarQube) live in 1Password, not on disk. The `claude` fish function (`fish/functions/claude.fish`) wraps launches with `op run --env-file=op/secrets.env` so the MCP servers get their tokens at runtime (falls back to a plain launch if op is unavailable); `grokcode` does the same. Point `op/secrets.env` at your items via `op/secrets.env.example`.
-- **Keyboard:** my Corne (QMK) keymap — combos, macros and custom OLEDs — lives in its own repo, `corne-keymap` (QMK external userspace), not here. `qmk` is in the Brewfile.
+- **Keyboard:** my Corne (QMK) keymap — combos, macros and custom OLEDs — lives in its own repo, [corne-keymap](https://github.com/tomymaritano/corne-keymap) (QMK external userspace), not here. The QMK CLI is `pipx install qmk` (Brewfile installs `pipx`).
 - The active theme lives in tracked files (`ghostty/config`, `starship.toml`), so
   running `theme <x>` shows up as a diff on those two files — that's expected.
